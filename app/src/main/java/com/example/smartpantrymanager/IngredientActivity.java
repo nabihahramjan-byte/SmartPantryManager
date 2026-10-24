@@ -25,7 +25,8 @@ public class IngredientActivity extends AppCompatActivity {
     private Spinner spinnerUnit;
     private TextView textViewExpiry;
     private TextView textViewTitle;
-    private final String[] units = {"g", "kg", "ml", "l", "pcs"};
+    // "none" means a plain count such as 3 eggs. It is stored in the database as "pcs".
+    private final String[] units = {"none", "g", "kg", "ml", "l"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,8 +72,12 @@ public class IngredientActivity extends AppCompatActivity {
             textViewTitle.setText("Edit Ingredient");
             editName.setText(currentIngredient.getName());
             editQuantity.setText(String.valueOf(currentIngredient.getQuantity()));
+            String shownUnit = currentIngredient.getUnit();
+            if (shownUnit.equals("pcs")) {
+                shownUnit = "none";
+            }
             for (int i = 0; i < units.length; i++) {
-                if (units[i].equals(currentIngredient.getUnit())) {
+                if (units[i].equals(shownUnit)) {
                     spinnerUnit.setSelection(i);
                 }
             }
@@ -177,7 +182,11 @@ public class IngredientActivity extends AppCompatActivity {
         // ----- Copy the form values into the Ingredient object -----
         currentIngredient.setName(name);
         currentIngredient.setQuantity(quantity);
-        currentIngredient.setUnit(spinnerUnit.getSelectedItem().toString());
+        String chosenUnit = spinnerUnit.getSelectedItem().toString();
+        if (chosenUnit.equals("none")) {
+            chosenUnit = "pcs";
+        }
+        currentIngredient.setUnit(chosenUnit);
 
         // ----- Save: insert if new (id = -1), update if it already exists -----
         boolean wasSuccessful;

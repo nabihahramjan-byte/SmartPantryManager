@@ -46,8 +46,11 @@ public class RecipeDetailActivity extends AppCompatActivity {
         for (RecipeIngredient item : recipe.getIngredients()) {
             double q = item.getQuantity();
             String quantity = (q == Math.floor(q)) ? String.valueOf((long) q) : String.valueOf(q);
-            ingredientText.append("- ").append(item.getName()).append(": ")
-                    .append(quantity).append(" ").append(item.getUnit()).append("\n");
+            ingredientText.append("- ").append(item.getName()).append(": ").append(quantity);
+            if (!item.getUnit().equals("pcs")) {
+                ingredientText.append(" ").append(item.getUnit());
+            }
+            ingredientText.append("\n");
         }
         textViewIngredients.setText(ingredientText.toString());
         textViewSteps.setText(recipe.getSteps());

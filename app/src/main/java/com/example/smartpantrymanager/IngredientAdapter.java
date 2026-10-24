@@ -78,7 +78,12 @@ public class IngredientAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         Ingredient item = ingredientData.get(position);
 
         ivh.textName.setText(item.getName());
-        ivh.textQuantity.setText(formatQuantity(item.getQuantity()) + " " + item.getUnit());
+        // Plain counts (stored as "pcs") are shown without a unit, e.g. "3" instead of "3 pcs".
+        String quantityText = formatQuantity(item.getQuantity());
+        if (!item.getUnit().equals("pcs")) {
+            quantityText = quantityText + " " + item.getUnit();
+        }
+        ivh.textQuantity.setText(quantityText);
 
         // Expiry text
         ivh.textExpiry.setTextColor(Color.GRAY);
